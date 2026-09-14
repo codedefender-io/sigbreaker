@@ -118,10 +118,7 @@ The current WSL build uses **Clang 24.0.0git / LLD 24.0.0**, from LLVM commit
 [`4bf4bc65d198e54add11ce8e0bbae7ad51cbb0f8`](https://github.com/llvm/llvm-project/commit/4bf4bc65d198e54add11ce8e0bbae7ad51cbb0f8).
 This is a development revision, separate from the LLVM 20.1.0 Windows setup above.
 The binaries were refreshed on **September 13, 2026** with **CodeDefender 1.2.4**
-from Watermelon commit
-[`7dc6155b692ba6a5d8eade13137c7a3df594b466`](https://github.com/aftermathlabs/watermelon/commit/7dc6155b692ba6a5d8eade13137c7a3df594b466),
-which includes the ELF jump-table support introduced by
-[`6ba388572ba3b7a2da85e0f8c977a6745fab6f82`](https://github.com/aftermathlabs/watermelon/commit/6ba388572ba3b7a2da85e0f8c977a6745fab6f82).
+and include ELF jump-table support.
 The Linux binaries were built and tested on **Ubuntu 24.04.1 LTS, x86-64, under WSL**,
 with GCC 13.3.0 and glibc 2.39. Use Ubuntu 24.04 x86-64, either native or in WSL;
 the archive dynamically links against its system libraries.
