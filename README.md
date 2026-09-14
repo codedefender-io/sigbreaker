@@ -4,7 +4,7 @@ This repository offers a reproducible setup for evaluating SigBreaker's stabilit
 
 - `original.zip`: original Windows LLVM binaries for `clang` and `lld` lit tests.
 - `sigbreaker-1.0.zip`: Windows binaries scrambled with `SigBreaker 1.0`.
-- `sigbreaker-linux-x86_64.tar.gz`: Linux x86-64 SigBreaker `clang-24` and `lld`, their driver aliases, and binary checksums. See [Linux reproduction](#linux-reproduction-llvm-2400git).
+- `sigbreaker-linux-x86_64.tar.gz`: Linux x86-64 SigBreaker `clang-24` and `lld`, refreshed with ELF jump-table support, their driver aliases, and binary checksums. See [Linux reproduction](#linux-reproduction-llvm-2400git).
 
 ### Windows Test Results
 
@@ -117,6 +117,11 @@ python llvm-lit.py ../../../lld/test/ > altered-lld-lit-results.txt
 The current WSL build uses **Clang 24.0.0git / LLD 24.0.0**, from LLVM commit
 [`4bf4bc65d198e54add11ce8e0bbae7ad51cbb0f8`](https://github.com/llvm/llvm-project/commit/4bf4bc65d198e54add11ce8e0bbae7ad51cbb0f8).
 This is a development revision, separate from the LLVM 20.1.0 Windows setup above.
+The binaries were refreshed on **September 13, 2026** with **CodeDefender 1.2.4**
+from Watermelon commit
+[`7dc6155b692ba6a5d8eade13137c7a3df594b466`](https://github.com/aftermathlabs/watermelon/commit/7dc6155b692ba6a5d8eade13137c7a3df594b466),
+which includes the ELF jump-table support introduced by
+[`6ba388572ba3b7a2da85e0f8c977a6745fab6f82`](https://github.com/aftermathlabs/watermelon/commit/6ba388572ba3b7a2da85e0f8c977a6745fab6f82).
 The Linux binaries were built and tested on **Ubuntu 24.04.1 LTS, x86-64, under WSL**,
 with GCC 13.3.0 and glibc 2.39. Use Ubuntu 24.04 x86-64, either native or in WSL;
 the archive dynamically links against its system libraries.
@@ -258,8 +263,9 @@ PY
 
 ### Recorded Linux results
 
-The fresh WSL runs had identical test inventories and outcomes, with no unexpected
-failures. Regression counts were the same for baseline and SigBreaker:
+Fresh WSL runs of the September 13 refresh had identical test inventories and
+outcomes, with no unexpected failures. Regression counts were the same for baseline
+and SigBreaker:
 
 | Suite | Passed | Expected failures | Unsupported |
 |---|---:|---:|---:|
@@ -270,10 +276,12 @@ Separate, unchanged unit-test executables added 29,238 Clang passes and four LLD
 passes in each run. Clang also reported six skipped unit tests, omitted from lit's
 JSON. Counts can differ with host features; this build enables only the X86 backend.
 
-The Linux transformation selected all functions: 148,889 Clang functions and
-80,425 LLD functions were accepted. The decomposer rejected 22,615 Clang functions
-and 12,313 LLD functions, which retained their original implementations. Support
-tools and unit-test executables were unchanged.
+The Linux transformation selected every decomposable function. The refreshed
+decomposer rejected 20,150 Clang functions and 11,007 LLD functions, which retained
+their original implementations. The pre-jump-table archive rejected 22,615 and
+12,313 respectively, so the refresh leaves 2,465 fewer Clang functions and 1,306
+fewer LLD functions untransformed. Support tools and unit-test executables were
+unchanged.
 
 ## LLVM-LIT Tests
 
